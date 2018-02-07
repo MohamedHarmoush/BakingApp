@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BakingApp</string>
+    <string name="no_conn">no Internet Connection!!</string>
+</resources>

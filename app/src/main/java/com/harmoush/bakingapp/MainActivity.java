@@ -1,0 +1,166 @@
+package com.harmoush.bakingapp;
+
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.PersistableBundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.view.View;
+import android.widget.Adapter;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.harmoush.bakingapp.Models.Ingredient;
+import com.harmoush.bakingapp.Models.Recipe;
+import com.harmoush.bakingapp.Models.Step;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class MainActivity extends AppCompatActivity implements RecipeAdapter.ListItemClickListner{
+
+    @BindView(R.id.rv_recipes)
+    RecyclerView mRecipeRecyclerView;
+    private RecipeAdapter mRecipeAdapter;
+    private ArrayList<Recipe> mRecipes;
+   // private int numberOfViews;
+    private GridLayoutManager mgridLayoutManager;
+
+    public static String BASIC_API_URL ="https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        mRecipes = new ArrayList<>();
+        ButterKnife.bind(this);
+        mRecipeAdapter = new RecipeAdapter(mRecipes,this);
+       // numberOfViews = calculateNoOfColumns(this);
+        mgridLayoutManager = new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false);
+        mRecipeRecyclerView.setLayoutManager(mgridLayoutManager);
+        mRecipeRecyclerView.setAdapter(mRecipeAdapter);
+        if (savedInstanceState != null) {
+            mRecipes = savedInstanceState.getParcelableArrayList("mRecipes");
+            mRecipeAdapter = new RecipeAdapter(mRecipes,this);
+            mRecipeRecyclerView.setAdapter(mRecipeAdapter);
+        } else {
+            if (isNetworkAvailable()) {
+               // mNoConnection.setVisibility(View.INVISIBLE);
+                fetchDataFromInternet();
+            } else {
+                Snackbar.make(findViewById(R.id.layout), R.string.no_conn,Snackbar.LENGTH_LONG).show();
+            }
+        }
+
+    }
+  /*  public static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int scalingFactor = 180;
+        int noOfColumns = (int) (dpWidth / scalingFactor);
+        return noOfColumns;
+    }
+*/
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void fetchDataFromInternet() {
+        mRecipes.clear();
+        Ion.with(this)
+                .load(BASIC_API_URL)
+                .asJsonArray()
+                .setCallback(new FutureCallback<JsonArray>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonArray result) {
+                        // do stuff with the result or error
+                        if (e == null) {
+                            parseJsonArray(result);
+                            mRecipeAdapter.notifyDataSetChanged();
+                        }
+
+                    }
+                });
+    }
+
+    public void parseJsonArray(JsonArray jsonArray){
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JsonObject recipeJsonObject = jsonArray.get(i).getAsJsonObject();
+            String id,name,imageURL;
+            ArrayList<Ingredient> ingredients = new ArrayList<>();
+            ArrayList<Step> steps = new ArrayList<>();
+            Integer servings;
+            id = recipeJsonObject.get("id").getAsString().replace("\"","");
+            name = recipeJsonObject.get("name").getAsString().replace("\"","");
+            JsonArray ingredientsJasonArray = recipeJsonObject.getAsJsonArray("ingredients");
+            for (int j = 0; j < ingredientsJasonArray.size(); j++){
+                Ingredient ingredient = new Ingredient();
+                JsonObject ingredientsJasonObject = ingredientsJasonArray.get(j).getAsJsonObject();
+                ingredient.setQuantity(ingredientsJasonObject.get("quantity").getAsFloat());
+                ingredient.setMeasure(ingredientsJasonObject.get("measure").getAsString().replace("\"",""));
+                ingredient.setIngredient(ingredientsJasonObject.get("ingredient").getAsString().replace("\"",""));
+                ingredients.add(ingredient);
+            }
+            JsonArray stepsJasonArray = recipeJsonObject.getAsJsonArray("steps");
+            for (int j = 0; j < stepsJasonArray.size(); j++){
+                Step step = new Step();
+                JsonObject jsonObject = stepsJasonArray.get(j).getAsJsonObject();
+                step.setId(jsonObject.get("id").getAsInt());
+                step.setDescription(jsonObject.get("description").getAsString().replace("\"",""));
+                step.setShortDescription(jsonObject.get("shortDescription").getAsString().replace("\"",""));
+                if (jsonObject.has("videoURL")) {
+                    step.setVideoURL(jsonObject.get("videoURL").getAsString().replace("\"",""));
+                }else
+                    step.setVideoURL("");
+                if (jsonObject.has("thumbnailURL")) {
+                    step.setThumbnailURL(jsonObject.get("thumbnailURL").getAsString().replace("\"",""));
+                }else
+                    step.setThumbnailURL("");
+
+            }
+            if (recipeJsonObject.has("servings")) {
+                servings = recipeJsonObject.get("servings").getAsInt();
+            }
+            servings = -1;
+            if (recipeJsonObject.has("image")) {
+                imageURL = recipeJsonObject.get("image").getAsString().replace("\"","");
+            }else
+                imageURL ="";
+
+            mRecipes.add(new Recipe(id,name,ingredients,steps,servings,imageURL));
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("mRecipes", mRecipes);
+        super.onSaveInstanceState(outState);
+    }
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mRecipes  = savedInstanceState.getParcelableArrayList("mRecipes");
+    }
+
+    @Override
+    public void onListItemClickListener(int clikedItemIndex) {
+        //ToDo :- complete this method.
+        Snackbar.make(findViewById(R.id.layout),mRecipes.get(clikedItemIndex).getName(),Snackbar.LENGTH_LONG).show();
+    }
+}
