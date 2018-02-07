@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
     @Override
     public void onListItemClickListener(int clikedItemIndex) {
         //ToDo :- complete this method.
+        //new branch commit
         Snackbar.make(findViewById(R.id.layout),mRecipes.get(clikedItemIndex).getName(),Snackbar.LENGTH_LONG).show();
     }
 }
