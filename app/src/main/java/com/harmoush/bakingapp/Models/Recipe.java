@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Recipe implements Parcelable {
     String id;
     String name;
-    ArrayList<Ingredient> ingredients;
+    ArrayList<Ingradient> ingradients;
     ArrayList<Step> steps;
     Integer servings;
     String imageURL;
@@ -26,8 +26,8 @@ public class Recipe implements Parcelable {
     public String getName() {
         return name;
     }
-    public ArrayList<Ingredient> getIngredients() {
-        return ingredients;
+    public ArrayList<Ingradient> getIngredients() {
+        return ingradients;
     }
     public ArrayList<Step> getSteps() {
         return steps;
@@ -40,10 +40,10 @@ public class Recipe implements Parcelable {
     }
 
 
-    public Recipe(String id, String name, ArrayList<Ingredient> ingredients, ArrayList<Step> steps, Integer servings, String imageURL) {
+    public Recipe(String id, String name, ArrayList<Ingradient> ingradients, ArrayList<Step> steps, Integer servings, String imageURL) {
         this.id = id;
         this.name = name;
-        this.ingredients = ingredients;
+        this.ingradients = ingradients;
         this.steps = steps;
         this.servings = servings;
         this.imageURL = imageURL;
@@ -53,10 +53,10 @@ public class Recipe implements Parcelable {
         id = in.readString();
         name = in.readString();
         if (in.readByte() == 0x01) {
-            ingredients = new ArrayList<Ingredient>();
-            in.readList(ingredients, Ingredient.class.getClassLoader());
+            ingradients = new ArrayList<Ingradient>();
+            in.readList(ingradients, Ingradient.class.getClassLoader());
         } else {
-            ingredients = null;
+            ingradients = null;
         }
         if (in.readByte() == 0x01) {
             steps = new ArrayList<Step>();
@@ -77,11 +77,11 @@ public class Recipe implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(name);
-        if (ingredients == null) {
+        if (ingradients == null) {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
-            dest.writeList(ingredients);
+            dest.writeList(ingradients);
         }
         if (steps == null) {
             dest.writeByte((byte) (0x00));

@@ -7,6 +7,8 @@
     <string name="widgetHeader">Recipe Ingradients</string>
     <string name="FavoriteIngradients">FavoriteIngradients</string>
     <string name="DesiredIngredients">DesiredIngredients</string>
-    <string name="defaultValue">there are no ingredients</string>
+    <string name="defaultValue">there are no ingradients</string>
     <string name="mRecipes">mRecipes</string>
+    <string name="ingradients">Ingradients</string>
+    <string name="ingradient_activity_lable">Ingradients</string>
 </resources>

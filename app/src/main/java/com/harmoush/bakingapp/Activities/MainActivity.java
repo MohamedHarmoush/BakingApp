@@ -1,32 +1,25 @@
-package com.harmoush.bakingapp;
+package com.harmoush.bakingapp.Activities;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
-import android.view.View;
-import android.widget.Adapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.harmoush.bakingapp.Models.Ingredient;
+
+import com.harmoush.bakingapp.Models.Ingradient;
 import com.harmoush.bakingapp.Models.Recipe;
 import com.harmoush.bakingapp.Models.Step;
+import com.harmoush.bakingapp.R;
+import com.harmoush.bakingapp.RecipeAdapter;
 import com.harmoush.bakingapp.Widget.BakingAppWidget;
-import com.harmoush.bakingapp.Widget.WidgetService;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
@@ -63,12 +56,10 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
             mRecipeAdapter = new RecipeAdapter(mRecipes,this);
             mRecipeRecyclerView.setAdapter(mRecipeAdapter);
         } else {
-            if (isNetworkAvailable()) {
-               // mNoConnection.setVisibility(View.INVISIBLE);
+            if (isNetworkAvailable())
                 fetchDataFromInternet();
-            } else {
+            else
                 Snackbar.make(findViewById(R.id.layout), R.string.no_conn,Snackbar.LENGTH_LONG).show();
-            }
         }
 
     }
@@ -108,19 +99,19 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         for (int i = 0; i < jsonArray.size(); i++) {
             JsonObject recipeJsonObject = jsonArray.get(i).getAsJsonObject();
             String id,name,imageURL;
-            ArrayList<Ingredient> ingredients = new ArrayList<>();
+            ArrayList<Ingradient> ingradients = new ArrayList<>();
             ArrayList<Step> steps = new ArrayList<>();
             Integer servings;
             id = recipeJsonObject.get("id").getAsString().replace("\"","");
             name = recipeJsonObject.get("name").getAsString().replace("\"","");
-            JsonArray ingredientsJasonArray = recipeJsonObject.getAsJsonArray("ingredients");
-            for (int j = 0; j < ingredientsJasonArray.size(); j++){
-                Ingredient ingredient = new Ingredient();
-                JsonObject ingredientsJasonObject = ingredientsJasonArray.get(j).getAsJsonObject();
-                ingredient.setQuantity(ingredientsJasonObject.get("quantity").getAsFloat());
-                ingredient.setMeasure(ingredientsJasonObject.get("measure").getAsString().replace("\"",""));
-                ingredient.setIngredient(ingredientsJasonObject.get("ingredient").getAsString().replace("\"",""));
-                ingredients.add(ingredient);
+            JsonArray ingradientsJasonArray = recipeJsonObject.getAsJsonArray("ingredients");
+            for (int j = 0; j < ingradientsJasonArray.size(); j++){
+                Ingradient ingredient = new Ingradient();
+                JsonObject ingradientsJasonObject = ingradientsJasonArray.get(j).getAsJsonObject();
+                ingredient.setQuantity(ingradientsJasonObject.get("quantity").getAsFloat());
+                ingredient.setMeasure(ingradientsJasonObject.get("measure").getAsString().replace("\"",""));
+                ingredient.setIngredient(ingradientsJasonObject.get("ingredient").getAsString().replace("\"",""));
+                ingradients.add(ingredient);
             }
             JsonArray stepsJasonArray = recipeJsonObject.getAsJsonArray("steps");
             for (int j = 0; j < stepsJasonArray.size(); j++){
@@ -148,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
             }else
                 imageURL ="";
 
-            mRecipes.add(new Recipe(id,name,ingredients,steps,servings,imageURL));
+            mRecipes.add(new Recipe(id,name,ingradients,steps,servings,imageURL));
         }
     }
 
@@ -175,14 +166,20 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         Intent intentwidget = new Intent(this, BakingAppWidget.class);
         intentwidget.setAction(BakingAppWidget.MY_WIDGET_UPDATE);
         sendBroadcast(intentwidget);
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra("recipe", mRecipes.get(clikedItemIndex));
+        startActivity(intent);
     }
 
     private String getRecipeIngredients(int position) {
         String ingredient = "";
-        for (int i = 0; i < mRecipes.get(position).getIngredients().size(); i++) {
+        int mSize =  mRecipes.get(position).getIngredients().size();
+        for (int i = 0; i < mSize; i++) {
             ingredient += String.valueOf(mRecipes.get(position).getIngredients().get(i).getQuantity()) + " "
                     + String.valueOf(mRecipes.get(position).getIngredients().get(i).getMeasure()) +
-                    " " + String.valueOf(mRecipes.get(position).getIngredients().get(i).getIngredient()) + " " + "\n";
+                    " " + String.valueOf(mRecipes.get(position).getIngredients().get(i).getIngredient());
+            if(i != mSize - 1)
+                ingredient +="\n";
         }
         return ingredient;
     }

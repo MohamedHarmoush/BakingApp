@@ -7,10 +7,10 @@ import android.os.Parcelable;
  * Created by Harmoush on 1/30/2018.
  */
 
-public class Ingredient implements Parcelable {
+public class Ingradient implements Parcelable {
     private Float quantity;
     private String measure;
-    private String ingredient;
+    private String ingradient;
 
     public void setQuantity(Float quantity) {
         this.quantity = quantity;
@@ -21,7 +21,7 @@ public class Ingredient implements Parcelable {
     }
 
     public void setIngredient(String ingredient) {
-        this.ingredient = ingredient;
+        this.ingradient = ingredient;
     }
 
     public Float getQuantity() {
@@ -33,14 +33,14 @@ public class Ingredient implements Parcelable {
     }
 
     public String getIngredient() {
-        return ingredient;
+        return ingradient;
     }
 
-    public Ingredient(){}
-    protected Ingredient(Parcel in) {
+    public Ingradient(){}
+    protected Ingradient(Parcel in) {
         quantity = in.readByte() == 0x00 ? null : in.readFloat();
         measure = in.readString();
-        ingredient = in.readString();
+        ingradient = in.readString();
     }
 
     @Override
@@ -57,19 +57,19 @@ public class Ingredient implements Parcelable {
             dest.writeFloat(quantity);
         }
         dest.writeString(measure);
-        dest.writeString(ingredient);
+        dest.writeString(ingradient);
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Ingredient> CREATOR = new Parcelable.Creator<Ingredient>() {
+    public static final Parcelable.Creator<Ingradient> CREATOR = new Parcelable.Creator<Ingradient>() {
         @Override
-        public Ingredient createFromParcel(Parcel in) {
-            return new Ingredient(in);
+        public Ingradient createFromParcel(Parcel in) {
+            return new Ingradient(in);
         }
 
         @Override
-        public Ingredient[] newArray(int size) {
-            return new Ingredient[size];
+        public Ingradient[] newArray(int size) {
+            return new Ingradient[size];
         }
     };
 }

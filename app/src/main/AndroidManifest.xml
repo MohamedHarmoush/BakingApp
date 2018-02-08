@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,9 +29,28 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/new_app_widget_info" />
         </receiver>
-        <service android:name=".Widget.WidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"
-            />
+
+        <service
+            android:name=".Widget.WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <activity android:name=".Activities.DetailsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activities.MainActivity" />
+        </activity>
+
+        <activity android:name=".Activities.IngradientActivity"
+            android:label="@string/ingradient_activity_lable">
+        </activity>
+    <!--    <activity
+            android:name=".StepActivity"
+            android:label="@string/title_activity_step"
+            android:theme="@style/AppTheme.NoActionBar" /> -->
+      <!--  <activity
+            android:name=".IngredentActivity"
+            android:label="@string/title_activity_ingredent"
+            android:theme="@style/AppTheme.NoActionBar" />-->
     </application>
 
 </manifest>
