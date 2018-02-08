@@ -1,7 +1,10 @@
 package com.harmoush.bakingapp;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.PersistableBundle;
@@ -22,6 +25,8 @@ import com.google.gson.JsonObject;
 import com.harmoush.bakingapp.Models.Ingredient;
 import com.harmoush.bakingapp.Models.Recipe;
 import com.harmoush.bakingapp.Models.Step;
+import com.harmoush.bakingapp.Widget.BakingAppWidget;
+import com.harmoush.bakingapp.Widget.WidgetService;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
@@ -54,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         mRecipeRecyclerView.setLayoutManager(mgridLayoutManager);
         mRecipeRecyclerView.setAdapter(mRecipeAdapter);
         if (savedInstanceState != null) {
-            mRecipes = savedInstanceState.getParcelableArrayList("mRecipes");
+            mRecipes = savedInstanceState.getParcelableArrayList(getString(R.string.mRecipes));
             mRecipeAdapter = new RecipeAdapter(mRecipes,this);
             mRecipeRecyclerView.setAdapter(mRecipeAdapter);
         } else {
@@ -149,13 +154,13 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList("mRecipes", mRecipes);
+        outState.putParcelableArrayList(getString(R.string.mRecipes), mRecipes);
         super.onSaveInstanceState(outState);
     }
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mRecipes  = savedInstanceState.getParcelableArrayList("mRecipes");
+        mRecipes  = savedInstanceState.getParcelableArrayList(getString(R.string.mRecipes));
     }
 
     @Override
@@ -163,5 +168,22 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         //ToDo :- complete this method.
         //new branch commit
         Snackbar.make(findViewById(R.id.layout),mRecipes.get(clikedItemIndex).getName(),Snackbar.LENGTH_LONG).show();
+        SharedPreferences sharedpreferences = getSharedPreferences(getString(R.string.FavoriteIngradients), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(getString(R.string.DesiredIngredients), getRecipeIngredients(clikedItemIndex));
+        editor.apply();
+        Intent intentwidget = new Intent(this, BakingAppWidget.class);
+        intentwidget.setAction(BakingAppWidget.MY_WIDGET_UPDATE);
+        sendBroadcast(intentwidget);
+    }
+
+    private String getRecipeIngredients(int position) {
+        String ingredient = "";
+        for (int i = 0; i < mRecipes.get(position).getIngredients().size(); i++) {
+            ingredient += String.valueOf(mRecipes.get(position).getIngredients().get(i).getQuantity()) + " "
+                    + String.valueOf(mRecipes.get(position).getIngredients().get(i).getMeasure()) +
+                    " " + String.valueOf(mRecipes.get(position).getIngredients().get(i).getIngredient()) + " " + "\n";
+        }
+        return ingredient;
     }
 }

@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">BakingApp</string>
     <string name="no_conn">no Internet Connection!!</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="widget_heder">widget</string>
+    <string name="widgetHeader">Recipe Ingradients</string>
+    <string name="FavoriteIngradients">FavoriteIngradients</string>
+    <string name="DesiredIngredients">DesiredIngredients</string>
+    <string name="defaultValue">there are no ingredients</string>
+    <string name="mRecipes">mRecipes</string>
 </resources>

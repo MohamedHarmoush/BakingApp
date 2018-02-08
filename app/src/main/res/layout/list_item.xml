@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:elevation="4dp"
+        android:elevation="2dp"
+        app:cardCornerRadius="5dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
@@ -19,6 +20,7 @@
             android:layout_height="match_parent"
             android:text="Hello World!"
             android:gravity="center"
+            android:background="@drawable/border"
             android:id="@+id/tv_recipe_name"
             android:layout_gravity="center"
             android:textSize="24sp"/>
