@@ -2,6 +2,7 @@ package com.harmoush.bakingapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,15 +36,16 @@ public class IngradientFragmentActivity extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_ingredent, container, false);
         ButterKnife.bind(this,rootView);
-        Intent intent = getActivity().getIntent();
-
-        if (intent.hasExtra("ingradient")) {
-            mIngradients = intent.getParcelableArrayListExtra("ingradient");
-        }
-       /* if(getArguments() != null)
+        if(savedInstanceState !=null)
+            mIngradients = savedInstanceState.getParcelableArrayList("mIngradients");
+        else if(getArguments() != null)
         {
-            ingradients = (ArrayList<Ingradient>) getArguments().getSerializable("ing");
-        }*/
+            mIngradients = getArguments().getParcelableArrayList("mIngradients");
+        }else {
+            Intent intent = getActivity().getIntent();
+            mIngradients = intent.getParcelableArrayListExtra("mIngradients");
+
+        }
         mgridLayoutManager = new GridLayoutManager(getContext(), 1, GridLayoutManager.VERTICAL, false);
         mIngradientRecyclerView.setLayoutManager(mgridLayoutManager);
         mIngredientAdapter = new IngradientAdapter(mIngradients);
@@ -51,5 +53,18 @@ public class IngradientFragmentActivity extends Fragment {
         mIngredientAdapter.notifyDataSetChanged();
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("mIngradients",mIngradients);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null)
+            mIngradients = savedInstanceState.getParcelableArrayList("mIngradients");
     }
 }

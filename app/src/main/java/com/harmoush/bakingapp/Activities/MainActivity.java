@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         intentwidget.setAction(BakingAppWidget.MY_WIDGET_UPDATE);
         sendBroadcast(intentwidget);
         Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra("recipe", mRecipes.get(clikedItemIndex));
+        intent.putExtra("mRecipe", mRecipes.get(clikedItemIndex));
         startActivity(intent);
     }
 

@@ -1,6 +1,7 @@
 package com.harmoush.bakingapp.Activities;
 
 
+import android.os.PersistableBundle;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
@@ -27,16 +28,21 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
-        Intent intent = getIntent();
-        mRecipe = intent.getParcelableExtra("recipe");
+        if(savedInstanceState!=null)
+            mRecipe = savedInstanceState.getParcelable("mRecipe");
+        else{
+            Intent intent = getIntent();
+            mRecipe = intent.getParcelableExtra("mRecipe");
+        }
         setTitle(mRecipe.getName());
         if(findViewById(R.id.fragment_details)!= null){
             mTwoPane = true;
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             IngradientFragmentActivity fragment = new IngradientFragmentActivity() ;
-            Intent in = new Intent();
-            in.putExtra("ingradient", mRecipe.getIngredients());
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList("mIngradients",mRecipe.getIngredients());
+            fragment.setArguments(bundle);
             fragmentTransaction.replace(R.id.fragment_details, fragment);
             fragmentTransaction.commit();
         }else{
@@ -50,25 +56,32 @@ public class DetailsActivity extends AppCompatActivity {
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     IngradientFragmentActivity fragment = new IngradientFragmentActivity();
-                    Intent in = new Intent();
-                    in.putParcelableArrayListExtra("ingradient",mRecipe.getIngredients());
-
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelableArrayList("mIngradients",mRecipe.getIngredients());
+                    fragment.setArguments(bundle);
                     fragmentTransaction.replace(R.id.fragment_details, fragment);
                     fragmentTransaction.commit();
                 } else {
                     mTwoPane = false;
                     Intent in = new Intent(getApplicationContext(), IngradientActivity.class);
-                    in.putParcelableArrayListExtra("ingradient",mRecipe.getIngredients());
+                    in.putParcelableArrayListExtra("mIngradients",mRecipe.getIngredients());
                     startActivity(in);
                 }
             }
         });
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable("mRecipe",mRecipe);
+        super.onSaveInstanceState(outState);
+    }
 
-
-
-
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mRecipe = savedInstanceState.getParcelable("mRecipe");
+    }
 }
 
 

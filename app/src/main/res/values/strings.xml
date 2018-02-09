@@ -11,4 +11,5 @@
     <string name="mRecipes">mRecipes</string>
     <string name="ingradients">Ingradients</string>
     <string name="ingradient_activity_lable">Ingradients</string>
+    <string name="steps">Steps</string>
 </resources>
