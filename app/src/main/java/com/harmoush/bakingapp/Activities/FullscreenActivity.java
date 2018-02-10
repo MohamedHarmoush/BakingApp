@@ -35,21 +35,10 @@ public class FullscreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fullscreen);
         ButterKnife.bind(this);
         mStepVideoURL = getIntent().getStringExtra("mStepVideoURL");
-        initializeMediaPlayer(Uri.parse(mStepVideoURL));
-
-
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        releaseMediaPlayer();
-    }
-
-    private void initializeMediaPlayer(Uri mediaUri) {
+        Uri mediaUri = Uri.parse(mStepVideoURL);
         if (mExoPlayer == null) {
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector(),new DefaultLoadControl());
             mPlayerView.setPlayer(mExoPlayer);
-
             String userAgent = Util.getUserAgent(this,"BakingApp");
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     this, userAgent), new DefaultExtractorsFactory(), null, null);
@@ -57,7 +46,9 @@ public class FullscreenActivity extends AppCompatActivity {
             mExoPlayer.setPlayWhenReady(false);
         }
     }
-    private void releaseMediaPlayer() {
+    @Override
+    protected void onPause() {
+        super.onPause();
         if (mExoPlayer != null) {
             mExoPlayer.stop();
             mExoPlayer.release();

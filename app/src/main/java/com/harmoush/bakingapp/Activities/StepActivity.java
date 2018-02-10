@@ -39,8 +39,7 @@ public class StepActivity extends AppCompatActivity {
             mRecipeStepPostion= savedInstanceState.getInt("mRecipeStepPostion");
         Intent in = getIntent();
         mNumberofFragments = in.getExtras().getInt("mSize");
-        if(in.getExtras()!=null)
-        {
+        if(in.getExtras()!=null) {
             mPosition = getIntent().getIntExtra("mPosition",5);
             mRecipe = getIntent().getParcelableExtra("mRecipe");
         }

@@ -175,10 +175,11 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
     private String getRecipeIngredients(int position) {
         String ingredient = "";
         int mSize =  mRecipes.get(position).getIngredients().size();
+        ArrayList<Ingradient> mIngradientArrayList = mRecipes.get(position).getIngredients();
         for (int i = 0; i < mSize; i++) {
-            ingredient += String.valueOf(mRecipes.get(position).getIngredients().get(i).getQuantity()) + " "
-                    + String.valueOf(mRecipes.get(position).getIngredients().get(i).getMeasure()) +
-                    " " + String.valueOf(mRecipes.get(position).getIngredients().get(i).getIngredient());
+            ingredient += mIngradientArrayList.get(i).getQuantity()+" ";
+            ingredient += mIngradientArrayList.get(i).getMeasure()+" ";
+            ingredient += mIngradientArrayList.get(i).getIngredient();
             if(i != mSize - 1)
                 ingredient +="\n";
         }

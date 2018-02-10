@@ -1,5 +1,7 @@
 package com.harmoush.bakingapp.Activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -51,8 +53,9 @@ public class StepFragmentActivity extends Fragment {
             position = getArguments().getInt("mPosition");
 
         }
-        if (getActivity().getIntent() != null) {
-            mRecipe = (Recipe)getActivity().getIntent().getExtras().get("mRecipe");
+        Intent intent = getActivity().getIntent();
+        if (intent != null) {
+            mRecipe = intent.getExtras().getParcelable("mRecipe");
         }
 
         if (mRecipe.getSteps().get(position).getVideoURL().isEmpty() &&
@@ -70,19 +73,21 @@ public class StepFragmentActivity extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        releasePlayer();
+        if (mExoPlayer != null) {
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        initializePlayer(Uri.parse(mRecipe.getSteps().get(position).getVideoURL()));
-    }
-
-    private void initializePlayer(Uri mediaUri) {
+        Uri mediaUri =Uri.parse(mRecipe.getSteps().get(position).getVideoURL());
         if (mExoPlayer == null) {
             // Create an instance of the ExoPlayer.
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), new DefaultTrackSelector(),new DefaultLoadControl());
+            Context context = getActivity();
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(context, new DefaultTrackSelector(),new DefaultLoadControl());
             mPlayerView.setPlayer(mExoPlayer);
 
             // Prepare the MediaSource.
@@ -93,14 +98,5 @@ public class StepFragmentActivity extends Fragment {
             mExoPlayer.setPlayWhenReady(false);
         }
     }
-
-    private void releasePlayer() {
-        if (mExoPlayer != null) {
-            mExoPlayer.stop();
-            mExoPlayer.release();
-            mExoPlayer = null;
-        }
-    }
-
 
 }
