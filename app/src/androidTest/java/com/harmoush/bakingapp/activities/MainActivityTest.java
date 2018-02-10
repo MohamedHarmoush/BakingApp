@@ -2,6 +2,7 @@ package com.harmoush.bakingapp.activities;
 
 
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -41,29 +42,19 @@ public class MainActivityTest {
     public void mainActivityTest() {
         ViewInteraction recyclerView = onView(
                 allOf(withId(R.id.rv_recipes),
-                        childAtPosition(
-                                withId(R.id.layout),
-                                0)));
-        recyclerView.perform(actionOnItemAtPosition(0, click()));
+                        isDisplayed()));
+        recyclerView.perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.btn_ingradients), withText("Ingradients"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        0),
-                                0),
                         isDisplayed()));
         appCompatButton.perform(click());
 
         pressBack();
 
         ViewInteraction recyclerView2 = onView(
-                allOf(withId(R.id.rv_steps),
-                        childAtPosition(
-                                withClassName(is("android.widget.LinearLayout")),
-                                2)));
-        recyclerView2.perform(actionOnItemAtPosition(0, click()));
+                allOf(withId(R.id.rv_steps), isDisplayed()));
+        recyclerView2.perform(RecyclerViewActions.actionOnItemAtPosition(2, click()));
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -75,13 +66,7 @@ public class MainActivityTest {
         }
 
         ViewInteraction appCompatImageButton = onView(
-                allOf(withId(R.id.exo_play), withContentDescription("Play"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        0),
-                                2),
-                        isDisplayed()));
+                allOf(withId(R.id.exo_play), withContentDescription("Play"), isDisplayed()));
         appCompatImageButton.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -94,13 +79,7 @@ public class MainActivityTest {
         }
 
         ViewInteraction appCompatImageButton2 = onView(
-                allOf(withId(R.id.exo_pause), withContentDescription("Pause"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        0),
-                                3),
-                        isDisplayed()));
+                allOf(withId(R.id.exo_pause), withContentDescription("Pause"),isDisplayed()));
         appCompatImageButton2.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -113,13 +92,7 @@ public class MainActivityTest {
         }
 
         ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.bt_next), withText("Next"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.activity_step),
-                                        1),
-                                1),
-                        isDisplayed()));
+                allOf(withId(R.id.bt_next), withText("Next"), isDisplayed()));
         appCompatButton2.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -132,13 +105,7 @@ public class MainActivityTest {
         }
 
         ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.bt_previous), withText("Previous"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.activity_step),
-                                        1),
-                                0),
-                        isDisplayed()));
+                allOf(withId(R.id.bt_previous), withText("Previous"), isDisplayed()));
         appCompatButton3.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
@@ -149,6 +116,37 @@ public class MainActivityTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        pressBack();
+
+        ViewInteraction recyclerView3 = onView(
+                allOf(withId(R.id.rv_steps), isDisplayed()));
+        recyclerView3.perform(RecyclerViewActions.actionOnItemAtPosition(3, click()));
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ViewInteraction appCompatImageButton3 = onView(
+                allOf(withId(R.id.exo_play), withContentDescription("Play"),
+                        isDisplayed()));
+        appCompatImageButton3.perform(click());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        pressBack();
 
         pressBack();
 

@@ -112,5 +112,14 @@ public class StepActivity extends AppCompatActivity {
         outState.putInt("mRecipeStepPostion",mViewPager.getCurrentItem());
         outState.putLong("mVideoStepPostion",mVideoStepPostion);
     }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState !=null){
+            mRecipeStepPostion = savedInstanceState.getInt("mRecipeStepPostion");
+            mVideoStepPostion = savedInstanceState.getLong("mVideoStepPostion");
+        }
+    }
 }
 
