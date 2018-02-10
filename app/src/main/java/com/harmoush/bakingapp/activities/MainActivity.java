@@ -1,4 +1,4 @@
-package com.harmoush.bakingapp.Activities;
+package com.harmoush.bakingapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,12 +14,12 @@ import android.support.v7.widget.RecyclerView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import com.harmoush.bakingapp.Models.Ingradient;
-import com.harmoush.bakingapp.Models.Recipe;
-import com.harmoush.bakingapp.Models.Step;
+import com.harmoush.bakingapp.models.Ingradient;
+import com.harmoush.bakingapp.models.Recipe;
+import com.harmoush.bakingapp.models.Step;
 import com.harmoush.bakingapp.R;
 import com.harmoush.bakingapp.RecipeAdapter;
-import com.harmoush.bakingapp.Widget.BakingAppWidget;
+import com.harmoush.bakingapp.widget.BakingAppWidget;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 

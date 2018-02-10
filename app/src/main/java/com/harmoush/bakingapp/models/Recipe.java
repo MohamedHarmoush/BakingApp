@@ -1,4 +1,4 @@
-package com.harmoush.bakingapp.Models;
+package com.harmoush.bakingapp.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

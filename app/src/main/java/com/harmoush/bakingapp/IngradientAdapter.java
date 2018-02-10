@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.harmoush.bakingapp.Models.Ingradient;
+import com.harmoush.bakingapp.models.Ingradient;
 
 import java.util.ArrayList;
 

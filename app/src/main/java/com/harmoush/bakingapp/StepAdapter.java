@@ -7,8 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.harmoush.bakingapp.Models.Recipe;
-import com.harmoush.bakingapp.Models.Step;
+import com.harmoush.bakingapp.models.Step;
 
 import java.util.ArrayList;
 

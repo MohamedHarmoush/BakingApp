@@ -1,7 +1,6 @@
-package com.harmoush.bakingapp.Widget;
+package com.harmoush.bakingapp.widget;
 
 import android.annotation.TargetApi;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -15,7 +14,7 @@ import android.widget.RemoteViews;
 import com.harmoush.bakingapp.R;
 
 /**
- * Implementation of App Widget functionality.
+ * Implementation of App widget functionality.
  */
 public class BakingAppWidget extends AppWidgetProvider {
 

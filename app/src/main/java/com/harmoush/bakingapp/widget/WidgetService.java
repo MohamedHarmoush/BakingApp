@@ -1,4 +1,4 @@
-package com.harmoush.bakingapp.Widget;
+package com.harmoush.bakingapp.widget;
 
 import android.content.Context;
 import android.content.Intent;

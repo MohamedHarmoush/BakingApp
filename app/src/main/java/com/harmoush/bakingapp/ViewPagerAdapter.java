@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.harmoush.bakingapp.Activities.StepFragmentActivity;
+import com.harmoush.bakingapp.activities.StepFragmentActivity;
 
 /**
  * Created by Harmoush on 2/10/2018.

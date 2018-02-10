@@ -1,11 +1,8 @@
-package com.harmoush.bakingapp.Activities;
+package com.harmoush.bakingapp.activities;
 
 
-import android.os.PersistableBundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,10 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.harmoush.bakingapp.Models.Recipe;
-import com.harmoush.bakingapp.Models.Step;
+import com.harmoush.bakingapp.models.Recipe;
+import com.harmoush.bakingapp.models.Step;
 import com.harmoush.bakingapp.R;
 import com.harmoush.bakingapp.StepAdapter;
 

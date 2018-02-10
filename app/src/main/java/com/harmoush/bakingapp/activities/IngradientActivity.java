@@ -1,12 +1,9 @@
-package com.harmoush.bakingapp.Activities;
+package com.harmoush.bakingapp.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 
 import com.harmoush.bakingapp.R;
-
-import butterknife.BindView;
 
 public class IngradientActivity extends AppCompatActivity {
 

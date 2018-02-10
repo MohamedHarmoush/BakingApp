@@ -1,4 +1,4 @@
-package com.harmoush.bakingapp.Activities;
+package com.harmoush.bakingapp.activities;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;

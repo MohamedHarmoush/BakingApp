@@ -1,4 +1,4 @@
-package com.harmoush.bakingapp.Activities;
+package com.harmoush.bakingapp.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -8,12 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.harmoush.bakingapp.Models.Recipe;
+import com.harmoush.bakingapp.models.Recipe;
 import com.harmoush.bakingapp.R;
 import com.harmoush.bakingapp.ViewPagerAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.harmoush.bakingapp.activities.StepFragmentActivity.mVideoStepPostion;
 
 /**
  * Created by Harmoush on 2/10/2018.
@@ -35,8 +37,10 @@ public class StepActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
         ButterKnife.bind(this);
-        if(savedInstanceState!=null)
-            mRecipeStepPostion= savedInstanceState.getInt("mRecipeStepPostion");
+        if(savedInstanceState!=null) {
+            mRecipeStepPostion = savedInstanceState.getInt("mRecipeStepPostion");
+            mVideoStepPostion = savedInstanceState.getLong("mVideoStepPostion");
+        }
         Intent in = getIntent();
         mNumberofFragments = in.getExtras().getInt("mSize");
         if(in.getExtras()!=null) {
@@ -56,6 +60,9 @@ public class StepActivity extends AppCompatActivity {
         if (mOrientationConfiguration == Configuration.ORIENTATION_LANDSCAPE) {
             Intent intent = new Intent(this , FullscreenActivity.class) ;
             intent.putExtra("mStepVideoURL",mRecipe.getSteps().get(mRecipeStepPostion).getVideoURL());
+            if (mVideoStepPostion !=null) {
+                intent.putExtra("mVideoStepPostion",mVideoStepPostion);
+            }
             startActivity(intent);
         }
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -103,6 +110,7 @@ public class StepActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("mRecipeStepPostion",mViewPager.getCurrentItem());
+        outState.putLong("mVideoStepPostion",mVideoStepPostion);
     }
 }
 
