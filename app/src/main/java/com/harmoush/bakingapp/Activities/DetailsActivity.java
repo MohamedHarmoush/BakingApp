@@ -101,6 +101,29 @@ public class DetailsActivity extends AppCompatActivity implements StepAdapter.Li
     @Override
     public void onListItemClickListener(int clikedItemIndex) {
       Snackbar.make(findViewById(R.id.step_list_item_layout),mSteps.get(clikedItemIndex).getShortDescription(),Snackbar.LENGTH_LONG).show();
+        if(findViewById(R.id.fragment_details)!=null)
+        {
+            mTwoPane = true ;
+            StepFragmentActivity fragment = new StepFragmentActivity() ;
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("mRecipe",mRecipe);
+            bundle.putInt("mPosition",clikedItemIndex);
+            //bundle.putParcelableArrayList("mSize",mRecipe.getIngredients());
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_details, fragment)
+                    .commit();
+        }
+        else
+        {
+            mTwoPane = false ;
+            Intent intent= new Intent(this,StepActivity.class);
+            intent.putExtra("mRecipe",mRecipe);
+            intent.putExtra("mPosition",clikedItemIndex);
+            intent.putExtra("mSize", mRecipe.getSteps().size());
+            startActivity(intent);
+        }
+
     }
 }
 

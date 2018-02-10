@@ -43,14 +43,9 @@
         <activity android:name=".Activities.IngradientActivity"
             android:label="@string/ingradient_activity_lable">
         </activity>
-    <!--    <activity
-            android:name=".StepActivity"
-            android:label="@string/title_activity_step"
-            android:theme="@style/AppTheme.NoActionBar" /> -->
-      <!--  <activity
-            android:name=".IngredentActivity"
-            android:label="@string/title_activity_ingredent"
-            android:theme="@style/AppTheme.NoActionBar" />-->
+        <activity android:name=".Activities.StepActivity"/>
+        <activity android:name=".Activities.FullscreenActivity"/>
+
     </application>
 
 </manifest>
