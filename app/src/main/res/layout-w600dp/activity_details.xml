@@ -23,7 +23,7 @@
             android:textSize="18sp"
             android:elevation="4dp"
             android:layout_marginRight="8dp"
-            android:background="@drawable/border"
+            android:background="@drawable/btn_border"
             android:paddingBottom="10dp"
             android:layout_marginBottom="10dp"
             android:text="@string/ingradients"
@@ -41,7 +41,7 @@
             android:gravity="center"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:background="@drawable/border"
+            android:background="@drawable/steps_border"
             android:text="@string/steps"/>
 
         <android.support.v7.widget.RecyclerView

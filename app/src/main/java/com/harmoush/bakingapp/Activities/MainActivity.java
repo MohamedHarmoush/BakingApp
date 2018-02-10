@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
                     step.setThumbnailURL(jsonObject.get("thumbnailURL").getAsString().replace("\"",""));
                 }else
                     step.setThumbnailURL("");
+                steps.add(step);
 
             }
             if (recipeJsonObject.has("servings")) {

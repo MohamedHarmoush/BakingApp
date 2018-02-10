@@ -2,27 +2,40 @@ package com.harmoush.bakingapp.Activities;
 
 
 import android.os.PersistableBundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.harmoush.bakingapp.Models.Recipe;
+import com.harmoush.bakingapp.Models.Step;
 import com.harmoush.bakingapp.R;
+import com.harmoush.bakingapp.StepAdapter;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity implements StepAdapter.ListItemClickListner{
 
     private boolean mTwoPane;
     @BindView(R.id.btn_ingradients)
     Button ingradientsButton;
     Recipe mRecipe;
-
+    @BindView(R.id.rv_steps)
+    RecyclerView mRecyclerViewSteps;
+    private GridLayoutManager gridLayoutManager;
+    private ArrayList<Step> mSteps;
+    private StepAdapter mStepAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,16 +48,16 @@ public class DetailsActivity extends AppCompatActivity {
             mRecipe = intent.getParcelableExtra("mRecipe");
         }
         setTitle(mRecipe.getName());
+        mSteps = mRecipe.getSteps();
+        gridLayoutManager = new GridLayoutManager(this,1, LinearLayoutManager.VERTICAL,false);
+        mStepAdapter = new StepAdapter(mSteps,this);
+        mRecyclerViewSteps.setLayoutManager(gridLayoutManager);
+        mRecyclerViewSteps.setAdapter(mStepAdapter);
+        mStepAdapter.notifyDataSetChanged();
+
         if(findViewById(R.id.fragment_details)!= null){
             mTwoPane = true;
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            IngradientFragmentActivity fragment = new IngradientFragmentActivity() ;
-            Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList("mIngradients",mRecipe.getIngredients());
-            fragment.setArguments(bundle);
-            fragmentTransaction.replace(R.id.fragment_details, fragment);
-            fragmentTransaction.commit();
+            setTwoPane();
         }else{
             mTwoPane = false;
         }
@@ -53,14 +66,7 @@ public class DetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (findViewById(R.id.fragment_details) != null) {
                     mTwoPane = true;
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    IngradientFragmentActivity fragment = new IngradientFragmentActivity();
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelableArrayList("mIngradients",mRecipe.getIngredients());
-                    fragment.setArguments(bundle);
-                    fragmentTransaction.replace(R.id.fragment_details, fragment);
-                    fragmentTransaction.commit();
+                    setTwoPane();
                 } else {
                     mTwoPane = false;
                     Intent in = new Intent(getApplicationContext(), IngradientActivity.class);
@@ -71,6 +77,15 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
+    private void setTwoPane(){
+        IngradientFragmentActivity fragment = new IngradientFragmentActivity() ;
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("mIngradients",mRecipe.getIngredients());
+        fragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_details, fragment)
+                .commit();
+    }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable("mRecipe",mRecipe);
@@ -81,6 +96,11 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mRecipe = savedInstanceState.getParcelable("mRecipe");
+    }
+
+    @Override
+    public void onListItemClickListener(int clikedItemIndex) {
+      Snackbar.make(findViewById(R.id.step_list_item_layout),mSteps.get(clikedItemIndex).getShortDescription(),Snackbar.LENGTH_LONG).show();
     }
 }
 
