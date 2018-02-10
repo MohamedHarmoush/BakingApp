@@ -24,12 +24,10 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -40,14 +38,17 @@ public class MainActivityTest {
 
     @Test
     public void mainActivityTest() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         ViewInteraction recyclerView = onView(
-                allOf(withId(R.id.rv_recipes),
-                        isDisplayed()));
-        recyclerView.perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+                allOf(withId(R.id.rv_recipes), isDisplayed()));
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
 
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.btn_ingradients), withText("Ingradients"),
-                        isDisplayed()));
+                allOf(withId(R.id.btn_ingradients), withText("Ingradients"), isDisplayed()));
         appCompatButton.perform(click());
 
         pressBack();
@@ -55,32 +56,6 @@ public class MainActivityTest {
         ViewInteraction recyclerView2 = onView(
                 allOf(withId(R.id.rv_steps), isDisplayed()));
         recyclerView2.perform(RecyclerViewActions.actionOnItemAtPosition(2, click()));
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction appCompatImageButton = onView(
-                allOf(withId(R.id.exo_play), withContentDescription("Play"), isDisplayed()));
-        appCompatImageButton.perform(click());
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction appCompatImageButton2 = onView(
-                allOf(withId(R.id.exo_pause), withContentDescription("Pause"),isDisplayed()));
-        appCompatImageButton2.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -126,27 +101,6 @@ public class MainActivityTest {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction appCompatImageButton3 = onView(
-                allOf(withId(R.id.exo_play), withContentDescription("Play"),
-                        isDisplayed()));
-        appCompatImageButton3.perform(click());
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        pressBack();
 
         pressBack();
 
