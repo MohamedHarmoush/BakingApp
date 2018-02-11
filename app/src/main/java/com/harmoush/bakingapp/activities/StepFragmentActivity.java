@@ -49,17 +49,25 @@ public class StepFragmentActivity extends Fragment {
     @BindView(R.id.iv_img) ImageView mImage;
     Uri mediaUri;
     public static long mVideoStepPostion;
-  //  private int currentWindow;
+    //  private int currentWindow;
     public static boolean playWhenReady;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_step, container, false);
         ButterKnife.bind(this,rootView);
+        mVideoStepPostion = C.TIME_UNSET;
+        if(savedInstanceState != null) {
+            mVideoStepPostion = savedInstanceState.getLong("mVideoStepPostion");
+            //currentWindow = savedInstanceState.getInt("currentWindow");
+            playWhenReady = savedInstanceState.getBoolean("playWhenReady");
+        }
         if (getArguments() != null) {
             mRecipe =  getArguments().getParcelable("mRecipe");
             position = getArguments().getInt("mPosition");
-           // mVideoStepPostion = getArguments().getLong("mVideoStepPostion");
+            mVideoStepPostion =getArguments().getLong("mVideoStepPostion",mVideoStepPostion);
+            playWhenReady =getArguments().getBoolean("putBoolean",playWhenReady);
+            // mVideoStepPostion = getArguments().getLong("mVideoStepPostion");
 
         }
         Intent intent = getActivity().getIntent();
@@ -73,12 +81,6 @@ public class StepFragmentActivity extends Fragment {
                     .load(mRecipe.getSteps().get(position).getThumbnailURL())
                     .into(mImage);
             mPlayerView.setVisibility(View.GONE);
-        }
-        mVideoStepPostion = C.TIME_UNSET;
-        if(savedInstanceState != null) {
-            mVideoStepPostion = savedInstanceState.getLong("mVideoStepPostion");
-            //currentWindow = savedInstanceState.getInt("currentWindow");
-            playWhenReady = savedInstanceState.getBoolean("playWhenReady");
         }
         mPlayerView.setVisibility(View.VISIBLE);
         Description.setText(mRecipe.getSteps().get(position).getDescription());
@@ -110,7 +112,7 @@ public class StepFragmentActivity extends Fragment {
     private void releasePlayer() {
         if (mExoPlayer != null) {
             mVideoStepPostion = mExoPlayer.getCurrentPosition();
-           // currentWindow = mExoPlayer.getCurrentWindowIndex();
+            // currentWindow = mExoPlayer.getCurrentWindowIndex();
             playWhenReady = mExoPlayer.getPlayWhenReady();
             mExoPlayer.stop();
             mExoPlayer.release();
@@ -145,14 +147,14 @@ public class StepFragmentActivity extends Fragment {
                 mVideoStepPostion = currentPosition;
                 playWhenReady = mExoPlayer.getPlayWhenReady();
                 outState.putBoolean("playWhenReady",playWhenReady);
-               // playWhenReady = savedInstanceState.getBoolean("playWhenReady");
+                // playWhenReady = savedInstanceState.getBoolean("playWhenReady");
             }
             else {
                 outState.putLong("mVideoStepPostion", mVideoStepPostion);
                 outState.putBoolean("playWhenReady",playWhenReady);
             }
         }
-      }
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -163,3 +165,4 @@ public class StepFragmentActivity extends Fragment {
         }
     }
 }
+

@@ -32,16 +32,23 @@ public class DetailsActivity extends AppCompatActivity implements StepAdapter.Li
     private GridLayoutManager gridLayoutManager;
     private ArrayList<Step> mSteps;
     private StepAdapter mStepAdapter;
+    private int clikedItemIndex;
+    private boolean btnClicked;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
-        if(savedInstanceState!=null)
+        clikedItemIndex = -1;
+        if(savedInstanceState!=null){
             mRecipe = savedInstanceState.getParcelable("mRecipe");
+            clikedItemIndex = savedInstanceState.getInt("clikedItemIndex");
+            btnClicked =savedInstanceState.getBoolean("btnClicked",false);
+        }
         else{
             Intent intent = getIntent();
             mRecipe = intent.getParcelableExtra("mRecipe");
+            btnClicked =false;
         }
         setTitle(mRecipe.getName());
         mSteps = mRecipe.getSteps();
@@ -53,7 +60,7 @@ public class DetailsActivity extends AppCompatActivity implements StepAdapter.Li
 
         if(findViewById(R.id.fragment_details)!= null){
             mTwoPane = true;
-            setTwoPane();
+            setTwoPane(btnClicked);
         }else{
             mTwoPane = false;
         }
@@ -62,7 +69,7 @@ public class DetailsActivity extends AppCompatActivity implements StepAdapter.Li
             public void onClick(View v) {
                 if (findViewById(R.id.fragment_details) != null) {
                     mTwoPane = true;
-                    setTwoPane();
+                    setTwoPane(btnClicked);
                 } else {
                     mTwoPane = false;
                     Intent in = new Intent(getApplicationContext(), IngradientActivity.class);
@@ -73,18 +80,35 @@ public class DetailsActivity extends AppCompatActivity implements StepAdapter.Li
         });
     }
 
-    private void setTwoPane(){
-        IngradientFragmentActivity fragment = new IngradientFragmentActivity() ;
+    private void setTwoPane(boolean btnClicked){
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("mIngradients",mRecipe.getIngredients());
-        fragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_details, fragment)
-                .commit();
+        if(btnClicked){
+            StepFragmentActivity fragment = new StepFragmentActivity() ;
+            bundle.putParcelable("mRecipe",mRecipe);
+            bundle.putInt("mPosition",clikedItemIndex);
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_details, fragment)
+                    .commit();
+        }else{
+            IngradientFragmentActivity fragment = new IngradientFragmentActivity() ;
+            bundle.putParcelableArrayList("mIngradients",mRecipe.getIngredients());
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_details, fragment)
+                    .commit();
+        }
+
+
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable("mRecipe",mRecipe);
+        if(mTwoPane){
+            outState.putInt("clikedItemIndex",clikedItemIndex);
+            if(clikedItemIndex !=-1)
+                outState.putBoolean("btnClicked",true);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -92,11 +116,14 @@ public class DetailsActivity extends AppCompatActivity implements StepAdapter.Li
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mRecipe = savedInstanceState.getParcelable("mRecipe");
+        clikedItemIndex = savedInstanceState.getInt("clikedItemIndex");
+        btnClicked = savedInstanceState.getBoolean("btnClicked");
     }
 
     @Override
     public void onListItemClickListener(int clikedItemIndex) {
-      Snackbar.make(findViewById(R.id.step_list_item_layout),mSteps.get(clikedItemIndex).getShortDescription(),Snackbar.LENGTH_LONG).show();
+        Snackbar.make(findViewById(R.id.step_list_item_layout),mSteps.get(clikedItemIndex).getShortDescription(),Snackbar.LENGTH_LONG).show();
+        this.clikedItemIndex = clikedItemIndex;
         if(findViewById(R.id.fragment_details)!=null)
         {
             mTwoPane = true ;
@@ -121,6 +148,3 @@ public class DetailsActivity extends AppCompatActivity implements StepAdapter.Li
 
     }
 }
-
-
-
