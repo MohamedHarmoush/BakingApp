@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.harmoush.bakingapp.activities.StepFragmentActivity.mVideoStepPostion;
-
+import static com.harmoush.bakingapp.activities.StepFragmentActivity.playWhenReady;
 /**
  * Created by Harmoush on 2/10/2018.
  */
@@ -40,6 +40,7 @@ public class StepActivity extends AppCompatActivity {
         if(savedInstanceState!=null) {
             mRecipeStepPostion = savedInstanceState.getInt("mRecipeStepPostion");
             mVideoStepPostion = savedInstanceState.getLong("mVideoStepPostion");
+            playWhenReady = savedInstanceState.getBoolean("playWhenReady");
         }
         Intent in = getIntent();
         mNumberofFragments = in.getExtras().getInt("mSize");
@@ -59,10 +60,12 @@ public class StepActivity extends AppCompatActivity {
         mOrientationConfiguration = this.getResources().getConfiguration().orientation;
         if (mOrientationConfiguration == Configuration.ORIENTATION_LANDSCAPE) {
             mVideoStepPostion = savedInstanceState.getLong("mVideoStepPostion");
+            playWhenReady = savedInstanceState.getBoolean("playWhenReady");
             Intent intent = new Intent(this , FullscreenActivity.class) ;
             intent.putExtra("mStepVideoURL",mRecipe.getSteps().get(mRecipeStepPostion).getVideoURL());
             if (mVideoStepPostion > 0) {
                 intent.putExtra("mVideoStepPostion",mVideoStepPostion);
+                intent.putExtra("playWhenReady",playWhenReady);
             }
             startActivity(intent);
         }
@@ -112,6 +115,7 @@ public class StepActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putInt("mRecipeStepPostion",mViewPager.getCurrentItem());
         outState.putLong("mVideoStepPostion",mVideoStepPostion);
+        outState.putBoolean("playWhenReady",playWhenReady);
     }
 
     @Override
@@ -120,6 +124,7 @@ public class StepActivity extends AppCompatActivity {
         if(savedInstanceState !=null){
             mRecipeStepPostion = savedInstanceState.getInt("mRecipeStepPostion");
             mVideoStepPostion = savedInstanceState.getLong("mVideoStepPostion");
+            playWhenReady = savedInstanceState.getBoolean("playWhenReady");
         }
     }
 }

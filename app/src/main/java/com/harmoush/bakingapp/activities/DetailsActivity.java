@@ -104,7 +104,6 @@ public class DetailsActivity extends AppCompatActivity implements StepAdapter.Li
             Bundle bundle = new Bundle();
             bundle.putParcelable("mRecipe",mRecipe);
             bundle.putInt("mPosition",clikedItemIndex);
-            //bundle.putParcelableArrayList("mSize",mRecipe.getIngredients());
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_details, fragment)

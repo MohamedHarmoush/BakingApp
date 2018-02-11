@@ -133,8 +133,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
             }
             if (recipeJsonObject.has("servings")) {
                 servings = recipeJsonObject.get("servings").getAsInt();
-            }
-            servings = -1;
+            }else
+                servings = -1;
             if (recipeJsonObject.has("image")) {
                 imageURL = recipeJsonObject.get("image").getAsString().replace("\"","");
             }else

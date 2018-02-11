@@ -5,8 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.harmoush.bakingapp.models.Step;
 
 import java.util.ArrayList;
@@ -42,7 +44,15 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder
     @Override
     public void onBindViewHolder(StepViewHolder holder, int position) {
         final Step step = mSteps.get(position);
-        holder.stepName.setText("Step "+(position+1) +": "+step.getShortDescription());
+        String s ="";
+        if(position != 0) {
+            position++;
+            s+="Step "+ position+": ";
+        }
+        s+=step.getShortDescription();
+        holder.stepName.setText(s);
+        if(step.getThumbnailURL()!=null && !step.getThumbnailURL().equals(""))
+            Glide.with(context).load(step.getThumbnailURL()).into(holder.stepImage);
     }
 
     @Override
@@ -54,6 +64,8 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder
 
         @BindView(R.id.tv_step)
         TextView stepName;
+        @BindView(R.id.iv_step)
+        ImageView stepImage;
         public StepViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);

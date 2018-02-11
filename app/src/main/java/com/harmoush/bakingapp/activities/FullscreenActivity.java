@@ -32,17 +32,24 @@ public class FullscreenActivity extends AppCompatActivity {
     SimpleExoPlayer mExoPlayer;
     private Uri mediaUri;
     private Long mVideoStepPostion;
+    private boolean playWhenReady;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fullscreen);
         ButterKnife.bind(this);
         mStepVideoURL = getIntent().getStringExtra("mStepVideoURL");
-        if(getIntent().hasExtra("mVideoStepPostion"))
+        if(getIntent().hasExtra("mVideoStepPostion")){
             mVideoStepPostion = getIntent().getLongExtra("mVideoStepPostion",0);
+            playWhenReady = getIntent().getBooleanExtra("playWhenReady",false);
+        }
+
         mediaUri = Uri.parse(mStepVideoURL);
-        if(savedInstanceState != null)
+        if(savedInstanceState != null){
             mVideoStepPostion = savedInstanceState.getLong("mVideoStepPostion");
+            playWhenReady = savedInstanceState.getBoolean("playWhenReady");
+
+        }
         initializePlayer();
     }
     @Override
@@ -80,6 +87,7 @@ public class FullscreenActivity extends AppCompatActivity {
     private void releasePlayer() {
         if (mExoPlayer != null) {
             mVideoStepPostion = mExoPlayer.getCurrentPosition();
+            playWhenReady = mExoPlayer.getPlayWhenReady();
             mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
@@ -98,7 +106,7 @@ public class FullscreenActivity extends AppCompatActivity {
             if(mVideoStepPostion !=null)
                 mExoPlayer.seekTo(mVideoStepPostion);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(false);
+            mExoPlayer.setPlayWhenReady(playWhenReady);
 
         }
     }
@@ -106,13 +114,17 @@ public class FullscreenActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong("mVideoStepPostion",mExoPlayer.getCurrentPosition());
+        outState.putBoolean("playWhenReady",playWhenReady);
+
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if(savedInstanceState != null)
+        if(savedInstanceState != null){
+            playWhenReady = savedInstanceState.getBoolean("playWhenReady");
             mVideoStepPostion = savedInstanceState.getLong("mVideoStepPostion");
+        }
     }
     @Override
     public void onBackPressed() {

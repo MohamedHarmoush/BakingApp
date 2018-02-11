@@ -42,8 +42,15 @@
 
         <activity android:name=".activities.IngradientActivity"
             android:label="@string/ingradient_activity_lable">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DetailsActivity"/>
         </activity>
-        <activity android:name=".activities.StepActivity"/>
+        <activity android:name=".activities.StepActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DetailsActivity"/>
+        </activity>
         <activity android:name=".activities.FullscreenActivity"/>
 
     </application>

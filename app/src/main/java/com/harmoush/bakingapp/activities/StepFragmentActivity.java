@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -48,6 +49,8 @@ public class StepFragmentActivity extends Fragment {
     @BindView(R.id.iv_img) ImageView mImage;
     Uri mediaUri;
     public static long mVideoStepPostion;
+  //  private int currentWindow;
+    public static boolean playWhenReady;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -56,7 +59,7 @@ public class StepFragmentActivity extends Fragment {
         if (getArguments() != null) {
             mRecipe =  getArguments().getParcelable("mRecipe");
             position = getArguments().getInt("mPosition");
-            mVideoStepPostion = getArguments().getLong("mVideoStepPostion");
+           // mVideoStepPostion = getArguments().getLong("mVideoStepPostion");
 
         }
         Intent intent = getActivity().getIntent();
@@ -71,7 +74,12 @@ public class StepFragmentActivity extends Fragment {
                     .into(mImage);
             mPlayerView.setVisibility(View.GONE);
         }
-
+        mVideoStepPostion = C.TIME_UNSET;
+        if(savedInstanceState != null) {
+            mVideoStepPostion = savedInstanceState.getLong("mVideoStepPostion");
+            //currentWindow = savedInstanceState.getInt("currentWindow");
+            playWhenReady = savedInstanceState.getBoolean("playWhenReady");
+        }
         mPlayerView.setVisibility(View.VISIBLE);
         Description.setText(mRecipe.getSteps().get(position).getDescription());
         return rootView;
@@ -102,6 +110,8 @@ public class StepFragmentActivity extends Fragment {
     private void releasePlayer() {
         if (mExoPlayer != null) {
             mVideoStepPostion = mExoPlayer.getCurrentPosition();
+           // currentWindow = mExoPlayer.getCurrentWindowIndex();
+            playWhenReady = mExoPlayer.getPlayWhenReady();
             mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
@@ -118,29 +128,38 @@ public class StepFragmentActivity extends Fragment {
             String mUserAgent = com.google.android.exoplayer2.util.Util.getUserAgent(getActivity(), "BakingApp");
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     getActivity(), mUserAgent), new DefaultExtractorsFactory(), null, null);
-            if(mVideoStepPostion > 0)
+            if(mVideoStepPostion != C.TIME_UNSET)
                 mExoPlayer.seekTo(mVideoStepPostion);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(false);
+            mExoPlayer.setPlayWhenReady(playWhenReady);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        long currentPosition = mExoPlayer.getCurrentPosition();
-        if(currentPosition > mVideoStepPostion){
-            outState.putLong("mVideoStepPostion",currentPosition);
-            mVideoStepPostion = currentPosition;
+        if(mExoPlayer!= null){
+            long currentPosition = mExoPlayer.getCurrentPosition();
+            if(currentPosition > mVideoStepPostion){
+                outState.putLong("mVideoStepPostion",currentPosition);
+                mVideoStepPostion = currentPosition;
+                playWhenReady = mExoPlayer.getPlayWhenReady();
+                outState.putBoolean("playWhenReady",playWhenReady);
+               // playWhenReady = savedInstanceState.getBoolean("playWhenReady");
+            }
+            else {
+                outState.putLong("mVideoStepPostion", mVideoStepPostion);
+                outState.putBoolean("playWhenReady",playWhenReady);
+            }
         }
-        else
-            outState.putLong("mVideoStepPostion",mVideoStepPostion);
-    }
+      }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(savedInstanceState != null)
-            mVideoStepPostion = savedInstanceState.getLong("mVideoStepPostion");
+        if(savedInstanceState != null){
+            mVideoStepPostion = savedInstanceState.getLong("mVideoStepPostion", C.TIME_UNSET);
+            playWhenReady = savedInstanceState.getBoolean("playWhenReady");
+        }
     }
 }

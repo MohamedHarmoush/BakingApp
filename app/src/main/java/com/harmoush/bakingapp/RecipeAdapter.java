@@ -5,8 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.harmoush.bakingapp.models.Recipe;
 
 import java.util.ArrayList;
@@ -43,6 +45,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     public void onBindViewHolder(RecipeViewHolder holder, int position) {
         final Recipe recipe = mRecipes.get(position);
         holder.recipeName.setText(recipe.getName());
+        int x =recipe.getServings();
+        if(recipe.getServings()!= -1)
+            holder.servings.setText("servings : "+recipe.getServings());
+        else
+            holder.servings.setVisibility(View.INVISIBLE);
+        if(recipe.getImageURL()!=null && recipe.getImageURL()!="")
+            Glide.with(context).load(recipe.getImageURL()).into(holder.recipeImage);
     }
 
     @Override
@@ -54,6 +63,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
         @BindView(R.id.tv_recipe_name)
         TextView recipeName;
+        @BindView(R.id.iv_recipe)
+        ImageView recipeImage;
+        @BindView(R.id.tv_servings)
+        TextView servings;
         public RecipeViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
