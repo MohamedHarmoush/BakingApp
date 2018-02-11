@@ -128,6 +128,10 @@ public class StepFragmentActivity extends Fragment {
 
             // Prepare the MediaSource.
             String mUserAgent = com.google.android.exoplayer2.util.Util.getUserAgent(getActivity(), "BakingApp");
+
+            //last reviewer failed to load video from link, but when trying to reconstruct the error locally,
+            //it only happens with no no/bad internet connection (failed to load link)
+            // not because of error in app itself
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     getActivity(), mUserAgent), new DefaultExtractorsFactory(), null, null);
             if(mVideoStepPostion != C.TIME_UNSET)
