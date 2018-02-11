@@ -58,9 +58,10 @@ public class StepActivity extends AppCompatActivity {
         }
         mOrientationConfiguration = this.getResources().getConfiguration().orientation;
         if (mOrientationConfiguration == Configuration.ORIENTATION_LANDSCAPE) {
+            mVideoStepPostion = savedInstanceState.getLong("mVideoStepPostion");
             Intent intent = new Intent(this , FullscreenActivity.class) ;
             intent.putExtra("mStepVideoURL",mRecipe.getSteps().get(mRecipeStepPostion).getVideoURL());
-            if (mVideoStepPostion !=null) {
+            if (mVideoStepPostion > 0) {
                 intent.putExtra("mVideoStepPostion",mVideoStepPostion);
             }
             startActivity(intent);

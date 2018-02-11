@@ -47,7 +47,7 @@ public class StepFragmentActivity extends Fragment {
     int position;
     @BindView(R.id.iv_img) ImageView mImage;
     Uri mediaUri;
-    public static Long mVideoStepPostion;
+    public static long mVideoStepPostion;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -56,6 +56,7 @@ public class StepFragmentActivity extends Fragment {
         if (getArguments() != null) {
             mRecipe =  getArguments().getParcelable("mRecipe");
             position = getArguments().getInt("mPosition");
+            mVideoStepPostion = getArguments().getLong("mVideoStepPostion");
 
         }
         Intent intent = getActivity().getIntent();
@@ -117,7 +118,7 @@ public class StepFragmentActivity extends Fragment {
             String mUserAgent = com.google.android.exoplayer2.util.Util.getUserAgent(getActivity(), "BakingApp");
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     getActivity(), mUserAgent), new DefaultExtractorsFactory(), null, null);
-            if(mVideoStepPostion !=null)
+            if(mVideoStepPostion > 0)
                 mExoPlayer.seekTo(mVideoStepPostion);
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(false);
@@ -127,8 +128,13 @@ public class StepFragmentActivity extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Long currentPosition = mExoPlayer.getCurrentPosition();
-        outState.putLong("mVideoStepPostion",currentPosition);
+        long currentPosition = mExoPlayer.getCurrentPosition();
+        if(currentPosition > mVideoStepPostion){
+            outState.putLong("mVideoStepPostion",currentPosition);
+            mVideoStepPostion = currentPosition;
+        }
+        else
+            outState.putLong("mVideoStepPostion",mVideoStepPostion);
     }
 
     @Override
