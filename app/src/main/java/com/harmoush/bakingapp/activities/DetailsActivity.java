@@ -1,6 +1,8 @@
 package com.harmoush.bakingapp.activities;
 
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -45,11 +47,11 @@ public class DetailsActivity extends AppCompatActivity implements StepAdapter.Li
             clikedItemIndex = savedInstanceState.getInt("clikedItemIndex");
             btnClicked =savedInstanceState.getBoolean("btnClicked",false);
         }
-        else{
+      else{
             Intent intent = getIntent();
             mRecipe = intent.getParcelableExtra("mRecipe");
             btnClicked =false;
-        }
+      }
         setTitle(mRecipe.getName());
         mSteps = mRecipe.getSteps();
         gridLayoutManager = new GridLayoutManager(this,1, LinearLayoutManager.VERTICAL,false);
@@ -133,7 +135,7 @@ public class DetailsActivity extends AppCompatActivity implements StepAdapter.Li
             bundle.putInt("mPosition",clikedItemIndex);
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_details, fragment)
+                    .replace(R.id.fragment_details, fragment)//.addToBackStack("back")
                     .commit();
         }
         else
@@ -143,8 +145,17 @@ public class DetailsActivity extends AppCompatActivity implements StepAdapter.Li
             intent.putExtra("mRecipe",mRecipe);
             intent.putExtra("mPosition",clikedItemIndex);
             intent.putExtra("mSize", mRecipe.getSteps().size());
-            startActivity(intent);
+           // startActivity(intent);
+            startActivityForResult(intent,1);
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && data!= null) {
+                    mRecipe = data.getParcelableExtra("mRecipe");
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

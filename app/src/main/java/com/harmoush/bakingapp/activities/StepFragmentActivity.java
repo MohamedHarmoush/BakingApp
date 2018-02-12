@@ -168,5 +168,6 @@ public class StepFragmentActivity extends Fragment {
             playWhenReady = savedInstanceState.getBoolean("playWhenReady");
         }
     }
+
 }
 

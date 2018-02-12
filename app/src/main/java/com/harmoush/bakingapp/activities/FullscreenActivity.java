@@ -54,6 +54,8 @@ public class FullscreenActivity extends AppCompatActivity {
     }
     @Override
     public void onPause() {
+        playWhenReady = mExoPlayer.getPlayWhenReady(); //////////
+        mVideoStepPostion = mExoPlayer.getCurrentPosition();
         super.onPause();
         if (Util.SDK_INT <= 23) {
             releasePlayer();
@@ -71,6 +73,8 @@ public class FullscreenActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        mVideoStepPostion = mExoPlayer.getCurrentPosition();//////////
+        playWhenReady = mExoPlayer.getPlayWhenReady(); /////////////
         if ((Util.SDK_INT <= 23 || mExoPlayer == null)) {
             initializePlayer();
         }

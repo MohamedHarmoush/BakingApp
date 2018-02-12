@@ -127,4 +127,12 @@ public class StepActivity extends AppCompatActivity {
             playWhenReady = savedInstanceState.getBoolean("playWhenReady");
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("mRecipe",mRecipe);
+        setResult(1,intent);
+        super.onBackPressed();
+    }
 }
