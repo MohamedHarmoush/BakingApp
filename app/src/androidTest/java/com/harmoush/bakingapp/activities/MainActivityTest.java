@@ -39,7 +39,7 @@ public class MainActivityTest {
     @Test
     public void mainActivityTest() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -55,7 +55,7 @@ public class MainActivityTest {
 
         ViewInteraction recyclerView2 = onView(
                 allOf(withId(R.id.rv_steps), isDisplayed()));
-        recyclerView2.perform(RecyclerViewActions.actionOnItemAtPosition(2, click()));
+        recyclerView2.perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
