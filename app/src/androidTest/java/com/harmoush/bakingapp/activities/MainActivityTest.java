@@ -1,6 +1,9 @@
 package com.harmoush.bakingapp.activities;
 
 
+import android.app.Activity;
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
@@ -15,6 +18,7 @@ import com.harmoush.bakingapp.R;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +39,11 @@ public class MainActivityTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
-
+    private Activity activity;
+    @Before
+    public void setup() {
+        activity = mActivityTestRule.getActivity();
+    }
     @Test
     public void mainActivityTest() {
         try {
@@ -50,12 +58,12 @@ public class MainActivityTest {
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.btn_ingradients), withText("Ingradients"), isDisplayed()));
         appCompatButton.perform(click());
-
-        pressBack();
-
+        if(activity.findViewById(R.id.fragment_details) == null)
+            pressBack();
         ViewInteraction recyclerView2 = onView(
                 allOf(withId(R.id.rv_steps), isDisplayed()));
-        recyclerView2.perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        recyclerView2.perform(RecyclerViewActions.scrollToPosition(0));
+        recyclerView2.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -65,44 +73,46 @@ public class MainActivityTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        if(activity.findViewById(R.id.fragment_details) != null) {
+            ViewInteraction appCompatButton2 = onView(
+                    allOf(withId(R.id.bt_next), withText("Next"), isDisplayed()));
+            appCompatButton2.perform(click());
 
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.bt_next), withText("Next"), isDisplayed()));
-        appCompatButton2.perform(click());
 
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            // Added a sleep statement to match the app's execution delay.
+            // The recommended way to handle such scenarios is to use Espresso idling resources:
+            // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            ViewInteraction appCompatButton3 = onView(
+                    allOf(withId(R.id.bt_previous), withText("Previous"), isDisplayed()));
+            appCompatButton3.perform(click());
+
+            // Added a sleep statement to match the app's execution delay.
+            // The recommended way to handle such scenarios is to use Espresso idling resources:
+            // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            pressBack();
+
+            ViewInteraction recyclerView3 = onView(
+                    allOf(withId(R.id.rv_steps), isDisplayed()));
+            recyclerView3.perform(RecyclerViewActions.actionOnItemAtPosition(3, click()));
+
+            // Added a sleep statement to match the app's execution delay.
+            // The recommended way to handle such scenarios is to use Espresso idling resources:
+            // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+
+            pressBack();
         }
 
-        ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.bt_previous), withText("Previous"), isDisplayed()));
-        appCompatButton3.perform(click());
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        pressBack();
-
-        ViewInteraction recyclerView3 = onView(
-                allOf(withId(R.id.rv_steps), isDisplayed()));
-        recyclerView3.perform(RecyclerViewActions.actionOnItemAtPosition(3, click()));
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-
-        pressBack();
 
         pressBack();
 

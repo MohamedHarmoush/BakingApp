@@ -1,8 +1,11 @@
 package com.harmoush.bakingapp.activities;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
@@ -43,7 +46,11 @@ public class IngradientActivityTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
-
+    private Activity activity;
+    @Before
+    public void setup() {
+        activity = mActivityTestRule.getActivity();
+    }
     @Test
     public void mainActivityTest1() {
         SystemClock.sleep(5000);
@@ -61,8 +68,8 @@ public class IngradientActivityTest {
         recyclerView2.perform(RecyclerViewActions.scrollToPosition(2));
 
         pressBack();
-
-        pressBack();
+        if(activity.findViewById(R.id.fragment_details) != null)
+            pressBack();
 
     }
 
